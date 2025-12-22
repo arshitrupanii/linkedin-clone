@@ -1,0 +1,99 @@
+# Node modules
+node_modules/
+**/node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+pids/
+*.pid
+*.pid.lock
+
+# Runtime data
+dist/
+build/
+tmp/
+temp/
+.cache/
+.vite/
+.vite-test/
+bundler-cache/
+
+# Coverage
+coverage/
+coverage-final.json
+.nyc_output/
+
+# Environment files (allow example files)
+.env
+.env.*
+!.env.example
+
+# Frontend / Backend specific
+/frontend/node_modules/
+/frontend/dist/
+/backend/node_modules/
+/backend/dist/
+/backend/uploads/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.code-workspace
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# Archives and packages
+*.tgz
+*.zip
+
+# Databases
+*.sqlite
+*.sqlite3
+*.db
+
+# Misc
+*.bak
+*.backup
+
+# Yarn / pnpm
+.pnp/
+.pnp.js
+.yarn/
+!/.yarn/cache
+!/.yarn/patches
+!/.yarn/plugins
+!/.yarn/releases
+!/.yarn/sdks
+!/.yarn/versions
+
+# Docker
+docker-compose.override.yml
+.env.docker
+
+# Test caches
+jest/cache/
+.vitest/
+
+# Ignore local env files in subfolders
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+node_modules
+.env
+dist
+.DS_Store
