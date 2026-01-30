@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors(
     {
-        origin: ["http://localhost:5173"],
+        origin: [process.env.FRONTEND_URL],
         credentials: true
     }
 ));
@@ -37,7 +37,16 @@ app.use("/api/v1/notifications", notificationRoutes)
 app.use("/api/v1/connections", connectionsRoutes)
 
 
-app.listen(PORT, () => {
-    connectDB();
-    console.log("server listening on port " + PORT);
-});
+function startServer (){
+    try {
+        app.listen(PORT, () => {
+            connectDB();
+            console.log("server listening on port " + PORT);
+        });
+    } catch (error) {
+        console.log("error in server start : " + error);
+        process.exit(1);
+    }
+}
+
+startServer();
