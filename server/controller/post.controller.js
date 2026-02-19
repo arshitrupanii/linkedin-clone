@@ -1,4 +1,4 @@
-import cloudinary from '../lib/cloudinary.js'
+// import cloudinary from '../lib/cloudinary.js'
 import Post from '../model/post.model.js'
 import Notifications from '../model/notification.model.js'
 import mongoose from 'mongoose'
