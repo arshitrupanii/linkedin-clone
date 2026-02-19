@@ -33,9 +33,11 @@ export const sendConnectionRequest = async (req, res) => {
 
 		await newRequest.save();
 
-		res.status(201).json({ message: "Connection request sent successfully" });
+		return res.status(200).json({ message: "Connection request sent successfully" });
+
 	} catch (error) {
-		res.status(500).json({ message: "Server error" });
+		console.error("Error in send connection : ", error);
+		return res.status(500).json({ message: "Failed to send connection request" });
 	}
 };
 
@@ -43,11 +45,10 @@ export const acceptConnectionRequest = async (req, res) => {
 	try {
 		const { requestId } = req.params; // who send connection request
 		const userId = req.user._id; // whom have request in inbox
-		
+
 		const request = await ConnectionRequest.findById(requestId)
 			.populate("sender", "name email username")
 			.populate("recipient", "name username");
-
 
 		if (!request) {
 			return res.status(404).json({ message: "Connection request not found" });
@@ -77,11 +78,11 @@ export const acceptConnectionRequest = async (req, res) => {
 
 		await notification.save();
 
-		res.json({ message: "Connection accepted successfully" });
+		return res.status(200).json({ message: "Connection accepted successfully" });
 
 	} catch (error) {
-		console.error("Error in acceptConnectionRequest controller:", error);
-		res.status(500).json({ message: "Server error" });
+		console.error("Error in accept request : ", error);
+		return res.status(500).json({ message: "Failed accept request" });
 	}
 };
 
@@ -103,10 +104,11 @@ export const rejectConnectionRequest = async (req, res) => {
 		request.status = "rejected";
 		await request.save();
 
-		res.json({ message: "Connection request rejected" });
+		return res.status(200).json({ message: "Connection request rejected" });
+
 	} catch (error) {
-		console.error("Error in rejectConnectionRequest controller:", error);
-		res.status(500).json({ message: "Server error" });
+		console.error("Error in reject connection request: ", error);
+		return res.status(500).json({ message: "Failed to reject request" });
 	}
 };
 
@@ -119,10 +121,11 @@ export const getConnectionRequests = async (req, res) => {
 			"name username profilePicture headline connections"
 		);
 
-		res.json(requests);
+		return res.status(200).json(requests);
+
 	} catch (error) {
-		console.error("Error in getConnectionRequests controller:", error);
-		res.status(500).json({ message: "Server error" });
+		console.error("Error in get connection request: ", error);
+		return res.status(500).json({ message: "Failed get connection request" });
 	}
 };
 
@@ -135,10 +138,11 @@ export const getUserConnections = async (req, res) => {
 			"name username profilePicture headline connections"
 		);
 
-		res.json(user.connections);
+		return res.status(200).json(user.connections);
+
 	} catch (error) {
-		console.error("Error in getUserConnections controller:", error);
-		res.status(500).json({ message: "Server error" });
+		console.error("Error in get user connection: ", error);
+		return res.status(500).json({ message: "Failed get user connection" });
 	}
 };
 
@@ -150,10 +154,11 @@ export const removeConnection = async (req, res) => {
 		await User.findByIdAndUpdate(myId, { $pull: { connections: userId } });
 		await User.findByIdAndUpdate(userId, { $pull: { connections: myId } });
 
-		res.json({ message: "Connection removed successfully" });
+		return res.status(200).json({ message: "Connection removed successfully" });
+
 	} catch (error) {
-		console.error("Error in removeConnection controller:", error);
-		res.status(500).json({ message: "Server error" });
+		console.error("Error in remove connection: ", error);
+		return res.status(500).json({ message: "Failed remove connection" });
 	}
 };
 
@@ -164,7 +169,7 @@ export const getConnectionStatus = async (req, res) => {
 
 		const currentUser = req.user;
 		if (currentUser.connections.includes(targetUserId)) {
-			return res.json({ status: "connected" });
+			return res.status(200).json({ status: "connected" });
 		}
 
 		const pendingRequest = await ConnectionRequest.findOne({
@@ -177,16 +182,17 @@ export const getConnectionStatus = async (req, res) => {
 
 		if (pendingRequest) {
 			if (pendingRequest.sender.toString() === currentUserId.toString()) {
-				return res.json({ status: "pending" });
+				return res.status(200).json({ status: "pending" });
 			} else {
-				return res.json({ status: "received", requestId: pendingRequest._id });
+				return res.status(200).json({ status: "received", requestId: pendingRequest._id });
 			}
 		}
 
 		// if no connection or pending req found
-		res.json({ status: "not_connected" });
+		return res.status(200).json({ status: "not_connected" });
+
 	} catch (error) {
-		console.error("Error in getConnectionStatus controller:", error);
-		res.status(500).json({ message: "Server error" });
+		console.error("Error in get connection status: ", error);
+		return res.status(500).json({ message: "Failed get connection status" });
 	}
 };

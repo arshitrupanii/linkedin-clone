@@ -35,8 +35,8 @@ export const signup = async (req, res) => {
         return res.status(201).json({ message: 'Signup successfully' })
 
     } catch (error) {
-        console.error("Error in signup : " + error.message);
-        return res.status(500).json({ message: "Error in Signup" });
+        console.error("Error in signup : " , error);
+        return res.status(500).json({ message: "Failed in Signup" });
     }
 }
 
@@ -61,8 +61,8 @@ export const login = async (req, res) => {
         return res.status(200).json({ message: 'Login successfully..' })
 
     } catch (error) {
-        console.error("Error in Login : " + error.message);
-        return res.status(500).json({ message: "Error in Login" });
+        console.error("Error in Login : " , error);
+        return res.status(500).json({ message: "Failed in Login" });
     }
 }
 
@@ -70,10 +70,10 @@ export const logout = (req, res) => {
     try {
         res.clearCookie("LinkedinToken");
         return res.status(200).json({ message: 'Logout Success' });
-        
+
     } catch (error) {
-        console.error("Error in Logout : " + error.message);
-        return res.status(500).json({ message: "Error in Logout" });
+        console.error("Error in Logout : " , error);
+        return res.status(500).json({ message: "Failed in Logout" });
     }
 }
 
@@ -82,7 +82,7 @@ export const getCurrentuser = async (req, res) => {
         return res.status(200).json(req.user);
 
     } catch (error) {
-        console.error("Error in getUser : " + error.message);
-        return res.status(500).json({ message: "Error in getUser" });
+        console.error("Error in getUser : " , error);
+        return res.status(500).json({ message: "Failed in getUser" });
     }
 }

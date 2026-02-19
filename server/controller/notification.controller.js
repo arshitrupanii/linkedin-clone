@@ -1,48 +1,51 @@
 import Notification from "../model/notification.model.js"
 
-export const getusernotification = async (req, res) => {
+export const getUserNotification = async (req, res) => {
     try {
         const notifications = await Notification.find({ recipient: req.user._id })
             .sort({ createdAt: -1 })
             .populate("relatedUser", "name username profilePicture")
-            .populate("relatedUser", "content image")
+            .populate("relatedPost", "content image")
 
-        res.status(200).json(notifications)
+        return res.status(200).json(notifications);
 
     } catch (error) {
-        console.log("error in getusernotifications : " + error)
-        res.status(500).json({ msg: "error in get user notifications " })
+        console.error("error in get user notifications : " , error)
+        return res.status(500).json({ message : "Failed get user notifications"})
     }
 }
 
 export const Notificationasread = async (req, res) => {
-    const notificationId = req.params.id;
     try {
+        const notificationId = req.params.id;
+
         const notification = await Notification.findOneAndUpdate(
             {_id : notificationId, recipient : req.user._id},
             {read: true},
             {new : true}
         )
         
-        res.json(notification)
+        return res.status(200).json(notification);
+
     } catch (error) {
-        console.log("error in Notificationasread : " + error)
-        res.status(500).json({ msg: "error in Notificationasread " })
+        console.error("error in notifications as read : " , error)
+        return res.status(500).json({ message : "Failed notifications as read"})
     }
 }
 
 export const deleteNotification = async (req, res) => {
-    const notificationId = req.params.id;
     try {
+        const notificationId = req.params.id;
+
         await Notification.findOneAndDelete({
             _id : notificationId,
             recipient : req.user._id
         })
         
-        res.json({msg : "Notification is deleted successfully."})
+        return res.status(200).json({message : "Notification is deleted successfully."})
 
     } catch (error) {
-        console.log("error in deleteNotification : " + error)
-        res.status(500).json({ msg: "error in deleteNotification " })
+        console.error("error in delete notifications : " , error)
+        return res.status(500).json({ message : "Failed delete notifications"})
     }
 }

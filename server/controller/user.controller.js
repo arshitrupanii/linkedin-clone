@@ -1,11 +1,11 @@
 import User from "../model/user.model.js";
-// import cloudinary from "../lib/cloudinary.js";
+import cloudinary from "../lib/cloudinary.js";
 
 
 export const getSuggestedConnections = async (req, res) => {
     try {
         const currentUser = await User.findById(req.user._id).select("connections")
-    
+
         const SuggestUser = await User.find({
             _id: {
                 $ne: req.user._id, $nin: currentUser.connections
@@ -15,8 +15,8 @@ export const getSuggestedConnections = async (req, res) => {
         return res.status(200).json(SuggestUser);
 
     } catch (error) {
-        console.error("Error in Suggest connection : " + error.message);
-        return res.status(500).json({ message: "Error in Suggest connection" });
+        console.error("Error in Suggest connection : ", error);
+        return res.status(500).json({ message: "Failed Suggest connection" });
     }
 
 }
@@ -32,8 +32,8 @@ export const getPublicProfile = async (req, res) => {
         return res.status(200).json(user);
 
     } catch (error) {
-        console.error("Error in public profile : " + error.message);
-        return res.status(500).json({ message: "Error in Get Profile" });
+        console.error("Error in public profile : ", error);
+        return res.status(500).json({ message: "Failed Get Profile" });
     }
 }
 
@@ -54,17 +54,40 @@ export const updateProfile = async (req, res) => {
 
         const updateData = {};
 
-        console.log(req);
-
-        if (req.body.profilePicture) {
-            // const result = await cloudinary.uploader.upload(req.body.profilePicture)
-            // updateData.profilePicture = result.secure_url
-        }
-
         for (const field of allowedFields) {
             if (req.body[field]) {
                 updateData[field] = req.body[field]
             }
+        }
+
+        if (req.body.profilePicture) {
+            const result = await cloudinary.uploader.upload(
+                req.body.profilePicture,
+                {
+                    folder: "linkedin-clone/profile",
+                    transformation: [
+                        { width: 500, height: 500, crop: "fill" },
+                        { quality: "auto" },
+                    ],
+                }
+            );
+
+            updateData.profilePicture = result.secure_url;
+        }
+
+        if (req.body.bannerImg) {
+            const result = await cloudinary.uploader.upload(
+                req.body.bannerImg,
+                {
+                    folder: "linkedin-clone/banner",
+                    transformation: [
+                        { width: 1200, height: 300, crop: "fill" },
+                        { quality: "auto" },
+                    ],
+                }
+            );
+
+            updateData.bannerImg = result.secure_url;
         }
 
         const user = await User.findByIdAndUpdate(req.user._id, { $set: updateData }, { new: true }).select("-password -createdAt -updatedAt")
@@ -72,7 +95,7 @@ export const updateProfile = async (req, res) => {
         return res.status(200).json(user);
 
     } catch (error) {
-        console.error("Error in Update profile : " + error.message);
-        return res.status(500).json({ message: "Error in Update profile" });
+        console.error("Error in Update profile : ", error);
+        return res.status(500).json({ message: "Failed Update profile" });
     }
 }
