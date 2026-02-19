@@ -40,7 +40,7 @@ export const createPost = async (req, res) => {
         let newpost;
 
         if (image) {
-            const imgresult = await cloudinary.uploader.upload(image)
+            const imgresult = await cloudinary.uploader.upload(image);
             newpost = new Post({
                 author: req.user._id,
                 content,
