@@ -8,8 +8,7 @@ import { Users } from "lucide-react";
 import RecommendedUser from "../components/RecommendedUser";
 
 const Homepage = () => {
-  const { data: authuser } = useQuery({ queryKey: ["authuser"] }); // authuser is new variable in that
-  console.log(authuser)
+  const { data: authuser } = useQuery({ queryKey: ["authuser"] });
 
   const { data: recommendedUsers } = useQuery({
     queryKey: ["recommendedUsers"],

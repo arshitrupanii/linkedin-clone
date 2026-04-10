@@ -22,7 +22,8 @@ const SignPage = () => {
       queryClient.invalidateQueries({ queryKey: ["authuser"] });
     },
     onError: (error) => {
-      toast.error(error.response.data.msg);
+      console.log(error)
+      toast.error(error.response.data.errors[0].msg);
     },
   });
 

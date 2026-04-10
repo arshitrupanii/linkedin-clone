@@ -29,9 +29,12 @@ const Navbar = () => {
   const { mutate: logout } = useMutation({
     mutationFn: () => axiosInstance.post("/auth/logout"),
     onSuccess: () => {
-      console.log("logged out");
+      console.log("object")
       queryClient.invalidateQueries({ queryKey: ["authuser"] });
     },
+    onError : (err)=> {
+      console.log(err)
+    }
   });
 
   const unreadNotificationCount = notifications?.data.filter(
@@ -100,11 +103,11 @@ const Navbar = () => {
                   <span className="text-xs hidden md:block">Me</span>
                 </Link>
                 <button
-                  className="flex items-center space-x-1 text-sm text-white"
-                  onClick={() => logout()}
+                  className="flex items-center space-x-1 text-sm"
+                  onClick={() => logout}
                 >
                   <LogOut size={20} />
-                  <span className="hidden md:inline">Logout</span>
+                  <span className="text-xs hidden md:block">Logout</span>
                 </button>
               </>
             ) : (
