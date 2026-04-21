@@ -7,22 +7,26 @@ import ProfilePage from "./Pages/ProfilePage";
 import Notification from "./Pages/Notificaion.jsx";
 import Loginpage from "./components/auth/Loginpage.jsx";
 import SignPage from "./components/auth/Signpage.jsx";
-
-import { ToastContainer } from "react-toastify";
-import { useQuery } from "@tanstack/react-query";
-import { axiosInstance } from "./lib/axios.js";
 import NetworkPage from "./Pages/NetworkPage.jsx";
 import PostPage from "./components/PostPage.jsx";
 import Loading from "./components/Loading.jsx";
 
+import { ToastContainer } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
+import { axiosInstance } from "./lib/axios.js";
+
 function App() {
   const { data: authuser, isLoading } = useQuery({
     queryKey: ["authuser"],
+
     queryFn: async () => {
       try {
         const res = await axiosInstance.get("/auth/me");
+        console.log(res);
         return res.data;
+
       } catch (error) {
+        console.log(error);
         if (error.response && error.response.status === 401) {
           return null;
         }
