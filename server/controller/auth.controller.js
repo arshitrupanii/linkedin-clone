@@ -1,88 +1,76 @@
+import asyncHandler from '../lib/asyncHandler.js';
 import { generateToken } from '../lib/jwt.js';
 import User from '../model/user.model.js'
 import bcrypt from 'bcryptjs';
 
-export const signup = async (req, res) => {
-    try {
-        const { name, username, email, password } = req.body;
+export const signup = asyncHandler(async (req, res) => {
+    const { name, username, email, password } = req.body;
 
-        const existingusername = await User.exists({ username });
+    const existingusername = await User.exists({ username });
 
-        if (existingusername) {
-            return res.status(400).json({ message: 'Username already exists' });
-        }
-
-        const existingEmail = await User.exists({ email })
-
-        if (existingEmail) {
-            return res.status(400).json({ message: 'Email already exists' })
-        }
-
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        const user = new User({
-            name,
-            username,
-            email,
-            password: hashedPassword,
-        })
-
-        await user.save();
-
-        generateToken(user._id, res);
-
-        return res.status(201).json({ message: 'Signup successfully' })
-
-    } catch (error) {
-        console.error("Error in signup : ", error);
-        return res.status(500).json({ message: "Failed in Signup" });
+    if (existingUsername) {
+        const err = new Error("Username already exists");
+        err.statusCode = 409;
+        throw err;
     }
-}
 
-export const login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
+    const existingEmail = await User.exists({ email })
 
-        const existingEmail = await User.findOne({ email }).select("email password")
-
-        if (!existingEmail) {
-            return res.status(404).json({ success: false, message: 'Email not found' });
-        }
-
-        const isMatch = await bcrypt.compare(password, existingEmail.password);
-
-        if (!isMatch) {
-            return res.status(404).json({ success: false, message: 'Password mismatch or incorrect.' })
-        }
-
-        generateToken(existingEmail._id, res);
-
-        return res.status(200).json({ success : true, message: 'Login successfully..' })
-
-    } catch (error) {
-        console.error("Error in Login : ", error);
-        return res.status(500).json({ message: "Failed in Login" });
+    if (existingEmail) {
+        const err = new Error("Email already exists");
+        err.statusCode = 409;
+        throw err;
     }
-}
 
-export const logout = (req, res) => {
-    try {
-        res.clearCookie("LinkedinToken");
-        return res.status(200).json({ message: 'Logout Success' });
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    } catch (error) {
-        console.error("Error in Logout : ", error);
-        return res.status(500).json({ message: "Failed in Logout" });
+    const user = new User({
+        name,
+        username,
+        email,
+        password: hashedPassword,
+    })
+
+    await user.save();
+
+    generateToken(user._id, res);
+
+    res.status(201).json({ success: true, message: 'Signup successfully' })
+})
+
+export const login = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email }).select("+password");
+
+    if (!user) {
+        const err = new Error("Invalid credentials");
+        err.statusCode = 400;
+        throw err;
     }
-}
 
-export const getCurrentuser = async (req, res) => {
-    try {
-        return res.status(200).json(req.user);
+    const isMatch = await bcrypt.compare(password, user.password);
 
-    } catch (error) {
-        console.error("Error in getUser : ", error);
-        return res.status(500).json({ message: "Failed in getUser" });
+    if (!isMatch) {
+        const err = new Error("Invalid credentials");
+        err.statusCode = 400;
+        throw err;
     }
-}
+
+    generateToken(user._id, res);
+
+    res.status(200).json({ success: true, message: 'Login successfully..' })
+})
+
+export const logout = asyncHandler((req, res) => {
+    res.clearCookie("LinkedinToken");
+    return res.status(200).json({ success: true, message: 'Logout Success' });
+})
+
+export const getCurrentUser = asyncHandler(async (req, res) => {
+    res.status(200).json({
+        success: true,
+        user: req.user,
+    });
+});

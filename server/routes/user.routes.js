@@ -11,6 +11,4 @@ router.get('/:username', protectedRoute, getPublicProfile)
 router.put('/profile', protectedRoute, updateProfile)
 
 
-
-
 export default router
