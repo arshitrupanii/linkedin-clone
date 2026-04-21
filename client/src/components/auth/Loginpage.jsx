@@ -39,7 +39,7 @@ const Loginpage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center">
       {/* this is white page */}
-      <div className="flex justify-center">
+      {/* <div className="flex justify-center">
         <div className="w-[550px] flex flex-col bg-secondary p-7 gap-4 rounded-2xl">
           <h2 className="text-[37px] font-light">Sign In</h2>
 
@@ -102,7 +102,9 @@ const Loginpage = () => {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
+
+      
 
       <ToastContainer />
     </div>
