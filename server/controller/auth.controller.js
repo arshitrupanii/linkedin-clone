@@ -35,7 +35,7 @@ export const signup = async (req, res) => {
         return res.status(201).json({ message: 'Signup successfully' })
 
     } catch (error) {
-        console.error("Error in signup : " , error);
+        console.error("Error in signup : ", error);
         return res.status(500).json({ message: "Failed in Signup" });
     }
 }
@@ -47,21 +47,21 @@ export const login = async (req, res) => {
         const existingEmail = await User.findOne({ email }).select("email password")
 
         if (!existingEmail) {
-            return res.status(400).json({ message: 'Email not found' });
+            return res.status(404).json({ success: false, message: 'Email not found' });
         }
 
         const isMatch = await bcrypt.compare(password, existingEmail.password);
 
         if (!isMatch) {
-            return res.status(404).json({ message: 'Password mismatch or incorrect.' })
+            return res.status(404).json({ success: false, message: 'Password mismatch or incorrect.' })
         }
 
         generateToken(existingEmail._id, res);
 
-        return res.status(200).json({ message: 'Login successfully..' })
+        return res.status(200).json({ success : true, message: 'Login successfully..' })
 
     } catch (error) {
-        console.error("Error in Login : " , error);
+        console.error("Error in Login : ", error);
         return res.status(500).json({ message: "Failed in Login" });
     }
 }
@@ -72,7 +72,7 @@ export const logout = (req, res) => {
         return res.status(200).json({ message: 'Logout Success' });
 
     } catch (error) {
-        console.error("Error in Logout : " , error);
+        console.error("Error in Logout : ", error);
         return res.status(500).json({ message: "Failed in Logout" });
     }
 }
@@ -82,7 +82,7 @@ export const getCurrentuser = async (req, res) => {
         return res.status(200).json(req.user);
 
     } catch (error) {
-        console.error("Error in getUser : " , error);
+        console.error("Error in getUser : ", error);
         return res.status(500).json({ message: "Failed in getUser" });
     }
 }

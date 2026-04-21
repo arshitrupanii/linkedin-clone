@@ -6,8 +6,8 @@ import userRoutes from "./routes/user.routes.js";
 import postRoutes from "./routes/post.routes.js";
 import notificationRoutes from "./routes/notification.routes.js"
 import connectionsRoutes from "./routes/connections.routes.js"
-import dotenv from "dotenv";
 
+import dotenv from "dotenv";
 import { connectDB } from "./lib/db.js";
 import cors from "cors";
 
@@ -39,8 +39,8 @@ try {
     app.listen(PORT, () => {
         console.log(`server running on.. ${PORT}`);
     })
-
     connectDB();
+    
 } catch (error) {
     console.log("Error in server start : " + error);
     process.exit(1);
