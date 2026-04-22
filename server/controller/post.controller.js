@@ -18,10 +18,9 @@ export const createPost = asyncHandler(async (req, res) => {
     const { content, image } = req.body;
 
     if (!content && !image) {
-        return res.status(400).json({
-            success: false,
-            message: "Post must have content or image"
-        });
+        const err = new Error("Post must have content or image");
+        err.statusCode = 400;
+        throw err;
     }
 
     let imageUrl = "";
@@ -46,7 +45,7 @@ export const createPost = asyncHandler(async (req, res) => {
 
     await newPost.save();
 
-    return res.status(201).json({ success: true, newPost })
+    res.status(201).json({ success: true, newPost })
 })
 
 export const deletePost = asyncHandler(async (req, res) => {
@@ -56,27 +55,24 @@ export const deletePost = asyncHandler(async (req, res) => {
     const postValid = mongoose.Types.ObjectId.isValid(postId);
 
     if (!postId) {
-        return res.status(404).json({
-            success: false,
-            message: "Post Id not Valid!"
-        });
+        const err = new Error("Post Id not Valid")
+        err.statusCode = 404;
+        throw err;
     }
 
     const post = await Post.findById(postId);
 
     if (!post) {
-        return res.status(404).json({
-            success: false,
-            message: "Post not found!"
-        });
+        const err = new Error("Post not found!");
+        err.statusCode = 404;
+        throw err;
     }
 
     // check if the post has author
     if (post.author.toString() !== userId.toString()) {
-        return res.status(401).json({
-            success: false,
-            message: "You are not author of this post."
-        });
+        const err = new Error("You are not author of this post.");
+        err.statusCode = 401;
+        throw err;
     }
 
     // to do delete image
@@ -95,10 +91,9 @@ export const getPost = asyncHandler(async (req, res) => {
     const postValid = mongoose.Types.ObjectId.isValid(postId);
 
     if (!postValid) {
-        return res.status(404).json({
-            success: false,
-            message: "Post Id not Valid!"
-        });
+        const err = new Error("Post Id not Valid")
+        err.statusCode = 404;
+        throw err;
     }
 
     const post = await Post.findById(postId)
@@ -107,10 +102,9 @@ export const getPost = asyncHandler(async (req, res) => {
         .select("-createdAt -updatedAt")
 
     if (!post) {
-        return res.status(404).json({
-            success: false,
-            message: "Post not found!"
-        });
+        const err = new Error("Post not found")
+        err.statusCode = 404;
+        throw err;
     }
 
     res.status(200).json({ success: true, post })
@@ -123,10 +117,9 @@ export const createComment = asyncHandler(async (req, res) => {
     const postValid = mongoose.Types.ObjectId.isValid(postId);
 
     if (!postValid) {
-        return res.status(404).json({
-            success: false,
-            message: "Post Id not Valid!"
-        });
+        const err = new Error("Post Id not Valid")
+        err.statusCode = 404;
+        throw err;
     }
 
     const post = await Post.findByIdAndUpdate(postId, {
@@ -155,10 +148,9 @@ export const likepost = asyncHandler(async (req, res) => {
     const postValid = mongoose.Types.ObjectId.isValid(postId);
 
     if (!postValid) {
-        return res.status(404).json({
-            success: false,
-            message: "Post Id not Valid!"
-        });
+        const err = new Error("Post Id not Valid")
+        err.statusCode = 404;
+        throw err;
     }
 
     if (post.likes.includes(userId)) {

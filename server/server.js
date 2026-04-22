@@ -1,5 +1,5 @@
 // DEV TASK
-// test connection api and global error handling
+// testing is pending
 
 import express from "express";
 import cookieParser from "cookie-parser";
