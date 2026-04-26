@@ -36,18 +36,21 @@ export const signupValidation = validation(
 
 export const loginValidation = validation(
     [
-        body("email")
-            .notEmpty().withMessage("Email is required")
+        body("username")
+            .notEmpty().withMessage("Username is required")
             .trim()
             .toLowerCase()
-            .isEmail()
-            .withMessage("Invalid email format"),
+            .isLength({ min: 3, max: 30 })
+            .withMessage("Username must be 3-30 characters"),
+
 
         body("password")
             .notEmpty().withMessage("Password is required")
-            .isLength({ min: 8 })
-            .withMessage("Password must be at least 8 characters")
-            .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/)
-            .withMessage("Password must contain uppercase, lowercase, number and special character")
+            .isLength({ min: 8 }).withMessage("Password must be at least 8 characters")
+
+            .matches(/[a-z]/).withMessage("Password must contain lowercase letter")
+            .matches(/[A-Z]/).withMessage("Password must contain uppercase letter")
+            .matches(/\d/).withMessage("Password must contain number")
+            .matches(/[@$!%*?&]/).withMessage("Password must contain special character")
     ]
 );

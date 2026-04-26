@@ -40,9 +40,9 @@ export const signup = asyncHandler(async (req, res) => {
 })
 
 export const login = asyncHandler(async (req, res) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ username });
 
     if (!user) {
         const err = new Error("Invalid credentials");
