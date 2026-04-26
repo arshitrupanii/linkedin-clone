@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import asyncHandler from "../lib/asyncHandler.js";
 import ConnectionRequest from "../model/connectionsRequest.model.js";
 import Notification from "../model/notification.model.js";
@@ -6,6 +7,15 @@ import User from "../model/user.model.js";
 export const sendConnectionRequest = asyncHandler(async (req, res) => {
 	const { userId } = req.params; //who get connection request
 	const senderId = req.user._id; // who sent connection request
+
+	// Check user id
+	const userIdValid = mongoose.Types.ObjectId.isValid(userId);
+
+	if (!userId || !userIdValid) {
+		const err = new Error("User Id not Valid")
+		err.statusCode = 404;
+		throw err;
+	}
 
 	if (senderId.toString() === userId) {
 		const err = new Error("You can't send a request to yourself")
@@ -38,12 +48,21 @@ export const sendConnectionRequest = asyncHandler(async (req, res) => {
 
 	await newRequest.save();
 
-	res.status(200).json({ message: "Connection request sent successfully" });
+	res.status(200).json({ success: true, message: "Connection request sent successfully" });
 });
 
 export const acceptConnectionRequest = asyncHandler(async (req, res) => {
 	const { requestId } = req.params; // who send connection request
 	const userId = req.user._id; // whom have request in inbox
+
+	// Check request id
+	const requestIdValid = mongoose.Types.ObjectId.isValid(requestId);
+
+	if (!requestId || !requestIdValid) {
+		const err = new Error("Request Id not Valid")
+		err.statusCode = 404;
+		throw err;
+	}
 
 	const request = await ConnectionRequest.findById(requestId)
 		.populate("sender", "name email username")
@@ -56,6 +75,7 @@ export const acceptConnectionRequest = asyncHandler(async (req, res) => {
 	}
 
 	// check if the req is for the current user
+
 	if (request.recipient._id.toString() !== userId.toString()) {
 		const err = new Error("Not authorized to accept this request")
 		err.statusCode = 403;
@@ -83,14 +103,29 @@ export const acceptConnectionRequest = asyncHandler(async (req, res) => {
 
 	await notification.save();
 
-	res.status(200).json({ message: "Connection accepted successfully" });
+	res.status(200).json({ success: true, message: "Connection accepted successfully" });
 });
 
 export const rejectConnectionRequest = asyncHandler(async (req, res) => {
 	const { requestId } = req.params;
 	const userId = req.user._id;
 
+	// Check request id
+	const requestIdValid = mongoose.Types.ObjectId.isValid(requestId);
+
+	if (!requestId || !requestIdValid) {
+		const err = new Error("Request Id not Valid")
+		err.statusCode = 404;
+		throw err;
+	}
+
 	const request = await ConnectionRequest.findById(requestId);
+
+	if (!request) {
+		const err = new Error("Connection request not found")
+		err.statusCode = 404;
+		throw err;
+	}
 
 	if (request.recipient.toString() !== userId.toString()) {
 		const err = new Error("Not authorized to reject this request")
@@ -107,7 +142,7 @@ export const rejectConnectionRequest = asyncHandler(async (req, res) => {
 	request.status = "rejected";
 	await request.save();
 
-	res.status(200).json({ message: "Connection request rejected" });
+	res.status(200).json({ success: false, message: "Connection request rejected" });
 });
 
 export const getConnectionRequests = asyncHandler(async (req, res) => {
@@ -118,7 +153,7 @@ export const getConnectionRequests = asyncHandler(async (req, res) => {
 		"name username profilePicture headline connections"
 	);
 
-	res.status(200).json(requests);
+	res.status(200).json({ success: true, requests });
 });
 
 export const getUserConnections = asyncHandler(async (req, res) => {
@@ -129,22 +164,69 @@ export const getUserConnections = asyncHandler(async (req, res) => {
 		"name username profilePicture headline connections"
 	);
 
-	res.status(200).json(user.connections);
+	res.status(200).json({ success: true, connections: user.connections });
 });
 
 export const removeConnection = asyncHandler(async (req, res) => {
 	const myId = req.user._id;
 	const { userId } = req.params;
 
-	await User.findByIdAndUpdate(myId, { $pull: { connections: userId } });
-	await User.findByIdAndUpdate(userId, { $pull: { connections: myId } });
+	if (!mongoose.Types.ObjectId.isValid(userId)) {
+		const err = new Error("Invalid user ID");
+		err.statusCode = 400;
+		throw err;
+	}
 
-	res.status(200).json({ message: "Connection removed successfully" });
+	if (myId.toString() === userId) {
+		const err = new Error("You cannot remove yourself");
+		err.statusCode = 400;
+		throw err;
+	}
+
+	const [currentUser, targetUser] = await Promise.all([
+		User.findById(myId),
+		User.findById(userId),
+	]);
+
+	if (!currentUser || !targetUser) {
+		const err = new Error("User not found");
+		err.statusCode = 404;
+		throw err;
+	}
+
+	if (!currentUser.connections.includes(userId)) {
+		const err = new Error("Connection does not exist");
+		err.statusCode = 400;
+		throw err;
+	}
+
+	await Promise.all([
+		User.findByIdAndUpdate(myId, {
+			$pull: { connections: userId },
+		}),
+		User.findByIdAndUpdate(userId, {
+			$pull: { connections: myId },
+		}),
+	]);
+
+	res.status(200).json({
+		success: true,
+		message: "Connection removed successfully",
+	});
 });
 
 export const getConnectionStatus = asyncHandler(async (req, res) => {
 	const targetUserId = req.params.userId;
 	const currentUserId = req.user._id;
+
+	// Check user id
+	const targetUserIdValid = mongoose.Types.ObjectId.isValid(targetUserId);
+
+	if (!targetUserId || !targetUserIdValid) {
+		const err = new Error("User Id not Valid")
+		err.statusCode = 404;
+		throw err;
+	}
 
 	const currentUser = req.user;
 	if (currentUser.connections.includes(targetUserId)) {

@@ -8,7 +8,7 @@ export const signup = asyncHandler(async (req, res) => {
 
     const existingusername = await User.exists({ username });
 
-    if (existingUsername) {
+    if (existingusername) {
         const err = new Error("Username already exists");
         err.statusCode = 409;
         throw err;
@@ -60,12 +60,12 @@ export const login = asyncHandler(async (req, res) => {
 
     generateToken(user._id, res);
 
-    res.status(200).json({ success: true, message: 'Login successfully..' })
+    res.status(200).json({ success: true, message: 'Login successfully' })
 })
 
 export const logout = asyncHandler((req, res) => {
     res.clearCookie("LinkedinToken");
-    return res.status(200).json({ success: true, message: 'Logout Success' });
+    res.status(200).json({ success: true, message: 'Logout Success' });
 })
 
 export const getCurrentUser = asyncHandler(async (req, res) => {

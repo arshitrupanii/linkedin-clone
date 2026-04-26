@@ -52,9 +52,10 @@ export const deletePost = asyncHandler(async (req, res) => {
     const postId = req.params.id;
     const userId = req.user._id;
 
+    // Check valid params or not
     const postValid = mongoose.Types.ObjectId.isValid(postId);
 
-    if (!postId) {
+    if (!postId || !postValid) {
         const err = new Error("Post Id not Valid")
         err.statusCode = 404;
         throw err;
@@ -88,9 +89,10 @@ export const deletePost = asyncHandler(async (req, res) => {
 export const getPost = asyncHandler(async (req, res) => {
     const postId = req.params.id;
 
+    // Check valid params or not
     const postValid = mongoose.Types.ObjectId.isValid(postId);
 
-    if (!postValid) {
+    if (!postId || !postValid) {
         const err = new Error("Post Id not Valid")
         err.statusCode = 404;
         throw err;
@@ -114,9 +116,10 @@ export const createComment = asyncHandler(async (req, res) => {
     const postId = req.params.id;
     const { content } = req.body;
 
+    // Check valid params or not
     const postValid = mongoose.Types.ObjectId.isValid(postId);
 
-    if (!postValid) {
+    if (!postId || !postValid) {
         const err = new Error("Post Id not Valid")
         err.statusCode = 404;
         throw err;
@@ -143,12 +146,21 @@ export const createComment = asyncHandler(async (req, res) => {
 
 export const likepost = asyncHandler(async (req, res) => {
     const postId = req.params.id;
-    const post = await Post.findById(postId);
     const userId = req.user._id;
+
+    // Check valid params or not
     const postValid = mongoose.Types.ObjectId.isValid(postId);
 
-    if (!postValid) {
+    if (!postId || !postValid) {
         const err = new Error("Post Id not Valid")
+        err.statusCode = 404;
+        throw err;
+    }
+
+    const post = await Post.findById(postId);
+
+    if (!post) {
+        const err = new Error("Post not found")
         err.statusCode = 404;
         throw err;
     }

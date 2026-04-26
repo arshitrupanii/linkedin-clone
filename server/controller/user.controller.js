@@ -15,7 +15,6 @@ export const getSuggestedConnections = asyncHandler(async (req, res) => {
 })
 
 export const getPublicProfile = asyncHandler(async (req, res) => {
-
     const user = await User.findOne({ username: req.params.username }).select("-password -createdAt -updatedAt")
 
     if (!user) {

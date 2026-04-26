@@ -1,5 +1,6 @@
 import Notification from "../model/notification.model.js"
 import asyncHandler from "../lib/asyncHandler.js"
+import mongoose from "mongoose";
 
 export const getUserNotification = asyncHandler(async (req, res) => {
     const notifications = await Notification.find(
@@ -12,8 +13,19 @@ export const getUserNotification = asyncHandler(async (req, res) => {
 })
 
 export const Notificationasread = asyncHandler(async (req, res) => {
+    const { id: NotificationId } = req.params;
+
+    // Check request id
+    const NotificationIdValid = mongoose.Types.ObjectId.isValid(NotificationId);
+
+    if (!NotificationId || !NotificationIdValid) {
+        const err = new Error("Notification Id not Valid")
+        err.statusCode = 404;
+        throw err;
+    }
+
     const notification = await Notification.findOneAndUpdate(
-        { _id: req.params.id, recipient: req.user._id },
+        { _id: NotificationId, recipient: req.user._id },
         { read: true },
         { new: true }
     )
@@ -22,8 +34,19 @@ export const Notificationasread = asyncHandler(async (req, res) => {
 })
 
 export const deleteNotification = asyncHandler(async (req, res) => {
+    const { id: NotificationId } = req.params;
+
+    // Check request id
+    const NotificationIdValid = mongoose.Types.ObjectId.isValid(NotificationId);
+
+    if (!NotificationId || !NotificationIdValid) {
+        const err = new Error("Notification Id not Valid")
+        err.statusCode = 404;
+        throw err;
+    }
+
     const deleted = await Notification.findOneAndDelete({
-        _id: req.params.id,
+        _id: NotificationId,
         recipient: req.user._id
     })
 

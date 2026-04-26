@@ -9,10 +9,10 @@ router.put("/accept/:requestId", protectedRoute, acceptConnectionRequest)
 router.put("/reject/:requestId", protectedRoute, rejectConnectionRequest)
 
 router.get("/requests", protectedRoute, getConnectionRequests)
+router.get("/status/:userId", protectedRoute, getConnectionStatus)
 
 router.get("/", protectedRoute, getUserConnections)
 router.delete("/:userId", protectedRoute, removeConnection)
-router.get("/status/:userId", protectedRoute, getConnectionStatus)
 
 
 export default router
