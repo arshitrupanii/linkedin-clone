@@ -1,5 +1,5 @@
 {
-  "name": "linked-in-clone",
+  "name": "linked-in-clone-backend",
   "version": "1.0.0",
   "main": "server.js",
   "type": "module",
