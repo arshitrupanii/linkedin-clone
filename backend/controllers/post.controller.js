@@ -22,7 +22,16 @@ export const createPost = async (req, res) => {
 		let newPost;
 
 		if (image) {
-			const imgResult = await cloudinary.uploader.upload(image);
+			const imgResult = await cloudinary.uploader.upload(image, {
+				folder: "linkedin/posts",
+				quality: "auto:eco",
+				fetch_format: "auto",
+				width: 1600,
+				crop: "limit",
+				public_id: `post_${Date.now()}`,
+				resource_type: "image",
+				allowed_formats: ["jpg", "jpeg", "png", "gif"]
+			});
 			newPost = new Post({
 				author: req.user._id,
 				content,
