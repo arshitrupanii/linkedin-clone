@@ -1,51 +1,121 @@
-<h1 align="center">Linkedin Clone ✨</h1>
+## LinkedIn Clone
 
-![Demo App](/frontend/public/screenshot-for-readme.png)
+A full-stack LinkedIn-style social networking application with separate **frontend** and **backend** services.
 
-[Video Tutorial on Youtube](https://youtu.be/Ycg48pVp3SU)
+## Tech Stack
 
-About This Course:
+### Frontend
+- React
+- React Router
+- Axios
+- CSS / Tailwind / Styled Components (based on project setup)
 
-- 🚀 Project Setup
-- 🗄️ MongoDB Integration
-- 💳 Stripe Payment Setup
-- 🔐 Authentication System with JWT
-- 🎨 Design with Tailwind & DaisyUI
-- 🛡️ Data Protection
-- 🤝 Connection Requests (Send, Accept, Reject)
-- 📝 Creating and Sharing Posts
-- 🖼️ Image Upload for Posts and Profiles
-- 👤 Profile Creation and Updates
-- 👥 Suggested Users Feature
-- 👍 Like and Comment on Posts
-- 📰 News Feed Algorithm
-- ⌛ And a lot more...
+### Backend
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
+- JWT Authentication
 
-### Setup .env file
+## Features
+
+- User registration and login
+- Secure authentication with token-based auth
+- Profile creation and updates
+- Create, view, and interact with posts
+- Feed/home timeline
+- Responsive UI
+
+## Project Structure
 
 ```bash
+linkedin-clone/
+├── frontend/   # Client application
+└── backend/    # API server
+```
+
+## Getting Started
+
+### 1) Clone the repository
+
+```bash
+git clone <your-repo-url>
+cd linkedin-clone
+```
+
+### 2) Setup Backend
+
+```bash
+cd backend
+npm install
+```
+
+Create a `.env` file in `backend/` and add:
+
+```env
 PORT=5000
-MONGO_URI=<your_mongo_uri>
-
-JWT_SECRET=<yourverystrongsecret>
-
-NODE_ENV=development
-
-CLOUDINARY_API_KEY=<your_cloudinary_api_key>
-CLOUDINARY_API_SECRET=<your_cloudinary_api_secret>
-CLOUDINARY_CLOUD_NAME=<your_cloudinary_cloud_name>
-
-CLIENT_URL=http://localhost:5173
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+CLIENT_URL=http://localhost:3000
 ```
 
-### Run this app locally
+Run backend:
 
-```shell
-npm run build
+```bash
+npm run dev
 ```
 
-### Start the app
+### 3) Setup Frontend
 
-```shell
-npm run start
+Open a new terminal:
+
+```bash
+cd frontend
+npm install
 ```
+
+Create a `.env` file in `frontend/` (if required):
+
+```env
+REACT_APP_API_URL=http://localhost:5000
+```
+
+Run frontend:
+
+```bash
+npm start
+```
+
+## API Overview
+
+Typical backend route groups:
+- `/api/auth` - login/register
+- `/api/users` - user/profile operations
+- `/api/posts` - post CRUD and feed
+
+## Scripts
+
+### Backend
+- `npm run dev` - Start backend in development mode
+- `npm start` - Start backend in production mode
+
+### Frontend
+- `npm start` - Start development server
+- `npm run build` - Create production build
+
+## Deployment
+
+- Deploy backend to Render/Railway/Heroku/VPS
+- Deploy frontend to Vercel/Netlify
+- Set production environment variables for both services
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/new-feature`)
+3. Commit your changes (`git commit -m 'Add new feature'`)
+4. Push to the branch (`git push origin feature/new-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is for learning purposes. Add your preferred license if needed.
