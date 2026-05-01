@@ -71,81 +71,145 @@ linkedin-clone/
 
 ## Getting Started
 
-### 1) Clone the repository
+### Prerequisites
+
+- Node.js (v16+)
+- npm or yarn
+- MongoDB URI (local or Atlas)
+- Cloudinary account (for image uploads)
+
+### 1) Clone & Install
 
 ```bash
 git clone <your-repo-url>
 cd linkedin-clone
-```
-
-### 2) Setup Backend
-
-```bash
-cd backend
 npm install
 ```
 
-Create a `.env` file in `backend/` and add:
+### 2) Setup Backend Environment
+
+Create a `.env` file in the `backend/` folder:
 
 ```env
+# Database
+MONGO_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/<dbname>
+
+# JWT
+JWT_SECRET=your_super_secret_key_here
+
+# Cloudinary (for image uploads)
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+
+# Server
 PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-CLIENT_URL=http://localhost:3000
+NODE_ENV=development
+
+# Frontend URL (for CORS)
+CLIENT_URL=http://localhost:5173
 ```
 
-Run backend:
+### 3) Setup Frontend Environment
+
+Create a `.env` file in the `frontend/` folder:
+
+```env
+VITE_API_URL=http://localhost:5000/api/v1
+```
+
+### 4) Run Development
+
+**Terminal 1 — Backend:**
 
 ```bash
 npm run dev
 ```
 
-### 3) Setup Frontend
+Server runs on `http://localhost:5000`
 
-Open a new terminal:
+**Terminal 2 — Frontend:**
 
 ```bash
 cd frontend
-npm install
+npm run dev
 ```
 
-Create a `.env` file in `frontend/` (if required):
+App runs on `http://localhost:5173`
 
-```env
-REACT_APP_API_URL=http://localhost:5000
-```
+## API Endpoints
 
-Run frontend:
+Base URL: `http://localhost:5000/api/v1`
 
-```bash
-npm start
-```
+### Authentication (`/auth`)
 
-## API Overview
+- `POST /auth/register` — Register new user
+- `POST /auth/login` — Login user
+- `POST /auth/logout` — Logout user
 
-Typical backend route groups:
+### Users (`/users`)
 
-- `/api/auth` - login/register
-- `/api/users` - user/profile operations
-- `/api/posts` - post CRUD and feed
+- `GET /users/:id` — Get user profile
+- `PUT /users/:id` — Update user profile
+- `GET /users/suggested` — Get suggested connections
+
+### Posts (`/posts`)
+
+- `GET /posts` — Get feed posts
+- `POST /posts` — Create new post
+- `GET /posts/:id` — Get single post
+- `PUT /posts/:id` — Update post
+- `DELETE /posts/:id` — Delete post
+- `POST /posts/:id/like` — Like/unlike post
+- `POST /posts/:id/comment` — Add comment
+
+### Connections (`/connections`)
+
+- `POST /connections/request/:id` — Send connection request
+- `GET /connections/requests` — Get pending requests
+- `PUT /connections/requests/:id/accept` — Accept request
+- `PUT /connections/requests/:id/reject` — Reject request
+- `GET /connections` — Get user's connections
+
+### Notifications (`/notifications`)
+
+- `GET /notifications` — Get all notifications
+- `PUT /notifications/:id/read` — Mark as read
+- `DELETE /notifications/:id` — Delete notification
 
 ## Scripts
 
+### Root
+
+- `npm run build` — Install deps & build frontend for production
+- `npm install` — Install backend dependencies
+
 ### Backend
 
-- `npm run dev` - Start backend in development mode
-- `npm start` - Start backend in production mode
+- `npm run dev` — Start backend in development mode (with nodemon)
+- `npm start` — Start backend in production mode
 
 ### Frontend
 
-- `npm start` - Start development server
-- `npm run build` - Create production build
+- `npm run dev` — Start Vite dev server
+- `npm run build` — Build for production
+- `npm run preview` — Preview production build locally
+- `npm run lint` — Run ESLint
 
 ## Deployment
 
-- Deploy backend to Render/Railway/Heroku/VPS
-- Deploy frontend to Vercel/Netlify
-- Set production environment variables for both services
+### Backend (Render/Railway/Heroku)
+
+1. Set environment variables (MONGO*URI, JWT_SECRET, CLOUDINARY*\*, PORT, etc.)
+2. Run: `npm run build` (installs frontend deps and builds frontend)
+3. Start: `npm start`
+
+### Frontend
+
+- Alternatively, deploy frontend separately to Vercel/Netlify
+- Point API URL to deployed backend
+
+## Contributing
 
 ## Contributing
 
