@@ -106,16 +106,6 @@ CLOUDINARY_CLOUD_NAME=your_cloud_name
 PORT=5000
 NODE_ENV=development
 
-# Frontend URL (for CORS)
-CLIENT_URL=http://localhost:5173
-```
-
-### 3) Setup Frontend Environment
-
-Create a `.env` file in the `frontend/` folder:
-
-```env
-VITE_API_URL=http://localhost:5000/api/v1
 ```
 
 ### 4) Run Development
