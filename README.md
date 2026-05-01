@@ -1,36 +1,72 @@
 ## LinkedIn Clone
 
-A full-stack LinkedIn-style social networking application with separate **frontend** and **backend** services.
+A full-stack LinkedIn-style social networking application built with **React**, **Node.js**, **Express**, and **MongoDB**. Features user authentication, connection requests, posts, notifications, and image uploads via Cloudinary.
 
 ## Tech Stack
 
 ### Frontend
-- React
-- React Router
-- Axios
-- CSS / Tailwind / Styled Components (based on project setup)
+
+- **React 18** — UI framework
+- **React Router** — Client-side routing
+- **React Query** — Server state management
+- **Axios** — HTTP client
+- **Tailwind CSS + DaisyUI** — Styling
+- **Vite** — Build tool
 
 ### Backend
-- Node.js
-- Express.js
-- MongoDB (Mongoose)
-- JWT Authentication
+
+- **Node.js + Express.js** — Server framework
+- **MongoDB + Mongoose** — Database & ODM
+- **JWT** — Token-based authentication
+- **Cloudinary** — Image/media management
+- **Cookie Parser + CORS** — Request handling
 
 ## Features
 
-- User registration and login
-- Secure authentication with token-based auth
-- Profile creation and updates
-- Create, view, and interact with posts
-- Feed/home timeline
-- Responsive UI
+### Authentication & User Profile
+
+- User registration and secure login with bcryptjs
+- JWT-based token authentication
+- Profile creation with avatar, bio, work experience, education, and skills
+- Profile updates and photo management via Cloudinary
+
+### Social Features
+
+- **Posts** — Create, read, update, delete posts with image support
+- **Connections** — Send/receive/accept connection requests (LinkedIn-style networking)
+- **Notifications** — Real-time notifications for posts, connections, and interactions
+- **Feed** — Personalized feed showing posts from network
+
+### UI/UX
+
+- Responsive design optimized for desktop and mobile
+- Sidebar navigation
+- Recommended users suggestions
+- Clean, intuitive interface with DaisyUI components
 
 ## Project Structure
 
-```bash
+```
 linkedin-clone/
-├── frontend/   # Client application
-└── backend/    # API server
+├── backend/
+│   ├── controllers/         # Business logic (auth, user, post, connection, notification)
+│   ├── models/              # MongoDB schemas (user, post, connectionRequest, notification)
+│   ├── routes/              # API endpoints
+│   ├── middleware/          # Auth & request middleware
+│   ├── lib/                 # Utilities (database, Cloudinary setup)
+│   └── server.js            # Express app entry point
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/      # Reusable UI components
+│   │   ├── pages/           # Page components
+│   │   ├── lib/             # Axios config & utilities
+│   │   ├── utils/           # Helper functions
+│   │   └── main.jsx         # React entry point
+│   ├── package.json
+│   └── vite.config.js
+│
+└── package.json             # Root scripts
 ```
 
 ## Getting Started
@@ -88,6 +124,7 @@ npm start
 ## API Overview
 
 Typical backend route groups:
+
 - `/api/auth` - login/register
 - `/api/users` - user/profile operations
 - `/api/posts` - post CRUD and feed
@@ -95,10 +132,12 @@ Typical backend route groups:
 ## Scripts
 
 ### Backend
+
 - `npm run dev` - Start backend in development mode
 - `npm start` - Start backend in production mode
 
 ### Frontend
+
 - `npm start` - Start development server
 - `npm run build` - Create production build
 
