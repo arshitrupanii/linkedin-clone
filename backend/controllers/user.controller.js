@@ -61,12 +61,24 @@ export const updateProfile = async (req, res) => {
 		}
 
 		if (req.body.profilePicture) {
-			const result = await cloudinary.uploader.upload(req.body.profilePicture);
+			const result = await cloudinary.uploader.upload(req.body.profilePicture, {
+				folder: "linkedin/profile_pictures",
+				quality: "auto:eco",
+				fetch_format: "auto",
+				width: 1600,
+				crop: "limit"
+			});
 			updatedData.profilePicture = result.secure_url;
 		}
 
 		if (req.body.bannerImg) {
-			const result = await cloudinary.uploader.upload(req.body.bannerImg);
+			const result = await cloudinary.uploader.upload(req.body.bannerImg, {
+				folder: "linkedin/banner_images",
+				quality: "auto:eco",
+				fetch_format: "auto",
+				width: 1600,
+				crop: "limit"
+			});
 			updatedData.bannerImg = result.secure_url;
 		}
 
