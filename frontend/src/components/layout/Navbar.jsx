@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../../lib/axios";
 import { Link } from "react-router-dom";
-import { Bell, Home, LogOut, User, Users } from "lucide-react";
+import { Bell, Home, LogOut, Moon, Sun, User, Users } from "lucide-react";
 
-const Navbar = () => {
+const Navbar = ({ theme, onToggleTheme }) => {
 	const { data: authUser } = useQuery({ queryKey: ["authUser"] });
 	const queryClient = useQueryClient();
 
@@ -39,6 +39,15 @@ const Navbar = () => {
 						</Link>
 					</div>
 					<div className='flex items-center gap-2 md:gap-6'>
+						<button
+							type='button'
+							className='btn btn-ghost btn-circle btn-sm'
+							onClick={onToggleTheme}
+							aria-label={`Switch to ${theme === "linkedin-dark" ? "light" : "dark"} mode`}
+							title={`Switch to ${theme === "linkedin-dark" ? "light" : "dark"} mode`}
+						>
+							{theme === "linkedin-dark" ? <Sun size={20} /> : <Moon size={20} />}
+						</button>
 						{authUser ? (
 							<>
 								<Link to={"/"} className='text-neutral flex flex-col items-center'>
@@ -77,7 +86,7 @@ const Navbar = () => {
 									<span className='text-xs hidden md:block'>Me</span>
 								</Link>
 								<button
-									className='flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-800'
+									className='flex items-center space-x-1 text-sm text-info hover:text-neutral'
 									onClick={() => logout()}
 								>
 									<LogOut size={20} />

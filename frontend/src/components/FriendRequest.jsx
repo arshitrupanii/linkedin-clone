@@ -29,7 +29,7 @@ const FriendRequest = ({ request }) => {
 	});
 
 	return (
-		<div className='bg-white rounded-lg shadow p-4 flex items-center justify-between transition-all hover:shadow-md'>
+		<div className='bg-secondary rounded-lg shadow p-4 flex items-center justify-between transition-all hover:shadow-md'>
 			<div className='flex items-center gap-4'>
 				<Link to={`/profile/${request.sender.username}`}>
 					<img
@@ -43,7 +43,7 @@ const FriendRequest = ({ request }) => {
 					<Link to={`/profile/${request.sender.username}`} className='font-semibold text-lg'>
 						{request.sender.name}
 					</Link>
-					<p className='text-gray-600'>{request.sender.headline}</p>
+					<p className='text-info'>{request.sender.headline}</p>
 				</div>
 			</div>
 
@@ -55,7 +55,7 @@ const FriendRequest = ({ request }) => {
 					Accept
 				</button>
 				<button
-					className='bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors'
+					className='bg-base-200 text-neutral px-4 py-2 rounded-md hover:bg-base-300 transition-colors'
 					onClick={() => rejectConnectionRequest(request._id)}
 				>
 					Reject

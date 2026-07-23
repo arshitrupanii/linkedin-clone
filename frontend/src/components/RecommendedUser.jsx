@@ -48,7 +48,7 @@ const RecommendedUser = ({ user }) => {
 	const renderButton = () => {
 		if (isLoading) {
 			return (
-				<button className='px-3 py-1 rounded-full text-sm bg-gray-200 text-gray-500' disabled>
+				<button className='px-3 py-1 rounded-full text-sm bg-base-200 text-info' disabled>
 					Loading...
 				</button>
 			);

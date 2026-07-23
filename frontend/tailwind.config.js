@@ -22,6 +22,21 @@ export default {
 					error: "#CC1016", // Red (for errors)
 				},
 			},
+			{
+				"linkedin-dark": {
+					primary: "#71B7FB",
+					secondary: "#1B1F23",
+					accent: "#8FD06B",
+					neutral: "#F3F6F8",
+					"base-100": "#0F1215",
+					"base-200": "#252A2F",
+					"base-300": "#353B42",
+					info: "#B7C0C8",
+					success: "#62C78E",
+					warning: "#F5C75D",
+					error: "#FF6B70",
+				},
+			},
 		],
 	},
 };

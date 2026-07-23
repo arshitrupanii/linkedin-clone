@@ -82,15 +82,15 @@ const NotificationsPage = () => {
 		return (
 			<Link
 				to={`/post/${relatedPost._id}`}
-				className='mt-2 p-2 bg-gray-50 rounded-md flex items-center space-x-2 hover:bg-gray-100 transition-colors'
+				className='mt-2 p-2 bg-base-100 rounded-md flex items-center space-x-2 hover:bg-base-200 transition-colors'
 			>
 				{relatedPost.image && (
 					<img src={relatedPost.image} alt='Post preview' className='w-10 h-10 object-cover rounded' />
 				)}
 				<div className='flex-1 overflow-hidden'>
-					<p className='text-sm text-gray-600 truncate'>{relatedPost.content}</p>
+					<p className='text-sm text-info truncate'>{relatedPost.content}</p>
 				</div>
-				<ExternalLink size={14} className='text-gray-400' />
+				<ExternalLink size={14} className='text-info' />
 			</Link>
 		);
 	};
@@ -101,7 +101,7 @@ const NotificationsPage = () => {
 				<Sidebar user={authUser} />
 			</div>
 			<div className='col-span-1 lg:col-span-3'>
-				<div className='bg-white rounded-lg shadow p-6'>
+				<div className='bg-secondary rounded-lg shadow p-6'>
 					<h1 className='text-2xl font-bold mb-6'>Notifications</h1>
 
 					{isLoading ? (
@@ -111,8 +111,8 @@ const NotificationsPage = () => {
 							{notifications.data.map((notification) => (
 								<li
 									key={notification._id}
-									className={`bg-white border rounded-lg p-4 my-4 transition-all hover:shadow-md ${
-										!notification.read ? "border-blue-500" : "border-gray-200"
+									className={`bg-secondary border rounded-lg p-4 my-4 transition-all hover:shadow-md ${
+										!notification.read ? "border-primary" : "border-base-300"
 									}`}
 								>
 									<div className='flex items-start justify-between'>
@@ -127,12 +127,12 @@ const NotificationsPage = () => {
 
 											<div>
 												<div className='flex items-center gap-2'>
-													<div className='p-1 bg-gray-100 rounded-full'>
+													<div className='p-1 bg-base-200 rounded-full'>
 														{renderNotificationIcon(notification.type)}
 													</div>
 													<p className='text-sm'>{renderNotificationContent(notification)}</p>
 												</div>
-												<p className='text-xs text-gray-500 mt-1'>
+												<p className='text-xs text-info mt-1'>
 													{formatDistanceToNow(new Date(notification.createdAt), {
 														addSuffix: true,
 													})}
