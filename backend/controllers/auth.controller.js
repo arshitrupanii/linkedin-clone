@@ -59,13 +59,13 @@ export const login = async (req, res) => {
 		// Check if user exists
 		const user = await User.findOne({ username });
 		if (!user) {
-			return res.status(400).json({ message: "Invalid credentials" });
+			return res.status(400).json({ message: "Username not found!" });
 		}
 
 		// Check password
 		const isMatch = await bcrypt.compare(password, user.password);
 		if (!isMatch) {
-			return res.status(400).json({ message: "Invalid credentials" });
+			return res.status(400).json({ message: "Wrong password" });
 		}
 
 		// Create and send token
