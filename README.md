@@ -172,7 +172,10 @@ Base URL: `http://localhost:5000/api/v1`
 ### Root
 
 - `npm run build` — Install deps & build frontend for production
+- `npm run seed:feed` — Seed demo users, connections, and feed posts
 - `npm install` — Install backend dependencies
+
+The feed seed uses the `MONGO_URI` from `.env` and is safe to run more than once. It creates the demo login `alex.johnson` with password `linkedin-demo-password`.
 
 ### Backend
 
