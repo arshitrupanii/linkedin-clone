@@ -3,10 +3,9 @@ import mongoose from "mongoose";
 const MONGO_URI = process.env.MONGO_URI;
 
 if (!MONGO_URI) {
-  throw new Error("MONGO_URI environment variable is not defined");
+  throw new Error("MONGO_URI is not defined");
 }
 
-// Reuse MongoDB connection across Vercel serverless invocations
 let cached = global.mongoose;
 
 if (!cached) {
@@ -17,47 +16,31 @@ if (!cached) {
 }
 
 export const connectDB = async () => {
-  // Already connected
-  if (cached.conn) {
+  if (cached.conn && mongoose.connection.readyState === 1) {
     return cached.conn;
   }
 
-  // Connection is already being established
   if (!cached.promise) {
-    const opts = {
-      bufferCommands: false,
-
-      // Connection pool
-      maxPoolSize: 10,
-      minPoolSize: 0,
-
-      // Timeout settings
-      serverSelectionTimeoutMS: 5000,
-      connectTimeoutMS: 10000,
-
-      // Don't wait too long for a free connection
-      waitQueueTimeoutMS: 5000,
-    };
-
     cached.promise = mongoose
-      .connect(MONGO_URI, opts)
+      .connect(MONGO_URI, {
+        bufferCommands: false,
+        maxPoolSize: 10,
+        minPoolSize: 0,
+        serverSelectionTimeoutMS: 10000,
+        connectTimeoutMS: 10000,
+      })
       .then((mongoose) => {
-        console.log("MongoDB connected successfully");
+        console.log("MongoDB connected");
         return mongoose;
       })
       .catch((error) => {
         cached.promise = null;
-        console.error("MongoDB connection error:", error.message);
+        console.error("MongoDB connection failed:", error.message);
         throw error;
       });
   }
 
-  try {
-    cached.conn = await cached.promise;
-  } catch (error) {
-    cached.promise = null;
-    throw error;
-  }
+  cached.conn = await cached.promise;
 
   return cached.conn;
 };

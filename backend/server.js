@@ -31,6 +31,14 @@ if (process.env.NODE_ENV !== "production") {
 	);
 }
 
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 app.use(express.json({ limit: "5mb" })); // parse JSON request bodies
 app.use(cookieParser());
 app.use(morgan("dev"));
