@@ -4,6 +4,8 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
 import morgan from "morgan";
+import dns from "dns";
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 
 import authRoutes from "./routes/auth.route.js";
